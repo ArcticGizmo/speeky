@@ -4,3 +4,4 @@ eggs/
 *.egg-info/
 *.py[cod]
 *$py.class
+.vscode/
