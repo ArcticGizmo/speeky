@@ -1,0 +1,2 @@
+-e .
+deepspeech==0.9.3
