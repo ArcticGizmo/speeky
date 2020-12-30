@@ -36,7 +36,7 @@ def parsePattern(pattern):
 def resolveActions(actions, text):
   resolutions = []
   for action in actions:
-    match = re.match(action.pattern, text)
+    match = re.search(action.pattern, text, flags=re.IGNORECASE)
       
     if match:
       resolutions.append((action, match))
