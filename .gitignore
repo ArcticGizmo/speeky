@@ -5,3 +5,5 @@ eggs/
 *.py[cod]
 *$py.class
 .vscode/
+*.whl
+*.mp3
