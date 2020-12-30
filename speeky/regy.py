@@ -17,27 +17,21 @@ class Action(object):
   def __str__(self):
     return 'Pattern: {}'.format(self.pattern)
 
-class ResolvedAction(object):
-
-  def __init__(self, action, match):
-    self.action = action
-    self.match = match
-
 def parsePattern(pattern):
   if type(pattern) is str:
     return pattern
   namedPatterns = []
   for (index, part) in enumerate(pattern):
     match = re.match(r'^:(.*):(.*)', part)
-    name = (match.group(1) or index) if match else None
+    name = (match.group(1) or 'p{}'.format(index)) if match else None
     test = match.group(2) if match else part
     
     if name:
-      namedPatterns.append('?P<{}>{}'.format(name, test))
+      namedPatterns.append(r'(?P<{}>{})'.format(name, test))
     else:
-      namedPatterns.append(test)
+      namedPatterns.append('({})'.format(test))
 
-  return " ".join(namedPatterns)
+  return r" ".join(namedPatterns)
 
 def resolveActions(actions, text):
   resolutions = []
@@ -45,34 +39,28 @@ def resolveActions(actions, text):
     match = re.match(action.pattern, text)
       
     if match:
-      resolutions.append(ResolvedAction(action, match))
+      resolutions.append((action, match))
 
   return resolutions
 
 def resolveFirstAction(actions, text):
   resolutions = resolveActions(actions, text)
   if len(resolutions):
-    resolution = resolutions[0]
-    resolution.action.callback(resolution.match, resolution.action)
+    (action, match) = resolutions[0]
+    action.callback(match, *match.groupdict().values())
   else:
     print("No action for '{}'".format(text))
 
 def main():
-  a = Action(r'(What is a) (.*)', lambda match, action: print('What is a "{}"'.format(match.groups())))
-  print(a)
+  actions = [
+    Action(['What is a', '::(.*)'], lambda match, target: print('What is a "{}"'.format(target))),
+    Action(['Define', '::(.*)'], lambda match, target: print('Define the word "{}"'.format(target))),
+    Action([r'::\d', 'times', r'::\d'], lambda match, a, b: print('{} x {} = {}'.format(a, b, int(a) * int(b))))
+  ]
 
-  b = Action(['What is a', ':apple:(.*)', '::(.*)'], lambda match, action: print('What is a "{}"'.format(match.groups())))
-  print(b)
-
-
-
-  # actions = [
-  #   Action(r'(What is a) (.*)', lambda match, action: print('What is a "{}"'.format(match.groups()))),
-  #   Action(r'(Define the word) (.*)', lambda match, action: print('Define the word "{}"'.format(match.groups()))),
-  #   Action(r'(\d) times (\d)', lambda match, action: print('Times table: {}'.format(match.groups())))
-  # ]
-
-  # resolveFirstAction(actions, 'What is a cat man')
+  resolveFirstAction(actions, 'What is a cat man')
+  resolveFirstAction(actions, 'bad start What is a cat man')
+  resolveFirstAction(actions, '5 times 6')
 
   # analyizeText('What is a cat', r'(What is) (?P<xpple>a) (?P<eggplant>.*)')
 
