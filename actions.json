@@ -2,7 +2,7 @@
   "actionStart": "hi speeky",
   "actions": [
     {
-      "name": "WhatIs",
+      "name": "What is",
       "pattern": ["what is", "::(.*)"],
       "module": "speeky.actions",
       "function": "whatIs"
@@ -12,6 +12,18 @@
       "pattern": ["say", "::(.*)"],
       "module": "speeky.actions",
       "function": "say"
+    },
+    {
+      "name": "Calculate",
+      "pattern": ["calculate", "::(.*)"],
+      "module": "speeky.actions",
+      "function": "calculate"
+    },
+    {
+      "name": "Text numbers to int",
+      "pattern": ["::(.*)", "(as|to) (int|integer|number)"],
+      "module": "speeky.actions",
+      "function": "text2Number"
     }
   ]
 }
