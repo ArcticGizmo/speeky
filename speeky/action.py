@@ -35,3 +35,13 @@ def _parsePattern(pattern):
             namedPatterns.append('({})'.format(test))
 
     return r" ".join(namedPatterns)
+
+
+def resolveText(actions, text):
+  for action in actions:
+    match = re.search(action.pattern, text, flags=re.IGNORECASE)
+
+    if match:
+      return action.trigger(match, *match.groupdict().values())
+
+  print("-- Unknown command")

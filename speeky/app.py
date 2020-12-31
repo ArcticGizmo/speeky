@@ -57,6 +57,10 @@ def _main():
 
         if (text == 'list'):
             [print('* {}'.format(a)) for a in actions]
+            continue
+
+        action.resolveText(actions, text)
+        
 
 
 if __name__ == "__main__":

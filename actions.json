@@ -2,10 +2,16 @@
   "actionStart": "hi speeky",
   "actions": [
     {
-      "name": "Define",
-      "pattern": ["what is a", "::(.*)"],
+      "name": "WhatIs",
+      "pattern": ["what is", "::(.*)"],
       "module": "speeky.actions",
-      "function": "actionA"
+      "function": "whatIs"
+    },
+    {
+      "name": "Say",
+      "pattern": ["say", "::(.*)"],
+      "module": "speeky.actions",
+      "function": "say"
     }
   ]
 }
