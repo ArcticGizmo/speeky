@@ -15,7 +15,7 @@
     },
     {
       "name": "Calculate",
-      "pattern": ["calculate", "::(.*)"],
+      "pattern": ["cal(culate)*", "::(.*)"],
       "module": "speeky.actions",
       "function": "calculate"
     },
