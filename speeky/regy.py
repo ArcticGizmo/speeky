@@ -51,6 +51,7 @@ def resolveFirstAction(actions, text):
   else:
     print("No action for '{}'".format(text))
 
+
 def main():
   actions = [
     Action(['What is a', '::(.*)'], lambda match, target: print('What is a "{}"'.format(target))),

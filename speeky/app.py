@@ -1,18 +1,13 @@
 import os
-from speeky import stt, regy
+from speeky import stt, regy, action
 import speech_recognition as sr
-from gtts import gTTS
-from io import BytesIO
-import playsound
 import pyttsx3 as tts
-
-ttsEngine = tts.init()
+import json
 
 DIRNAME = os.path.dirname(__file__)
+CONFIG_PATH = os.path.join(DIRNAME, '..', 'actions.json')
 
-SAMPLE_1 = os.path.join(DIRNAME, 'sample_audio/1.wav')
-SAMPLE_2 = os.path.join(DIRNAME, 'sample_audio/2.wav')
-SAMPLE_3 = os.path.join(DIRNAME, 'sample_audio/3.wav')
+ttsEngine = tts.init()
 
 
 def speak(text):
@@ -20,7 +15,7 @@ def speak(text):
     ttsEngine.runAndWait()
 
 
-def get_audio():
+def getAudio():
     r = sr.Recognizer()
     with sr.Microphone() as source:
         print(source)
@@ -36,23 +31,33 @@ def get_audio():
             print("Exception: " + str(e))
 
     return said
+
+
+def getConfig(path):
+    with open(path) as file:
+        data = json.load(file)
+    return data
+
+
 def _main():
-    print("--- main")
-    model = stt.create_model()
-    print(stt.decode_file(model, SAMPLE_1))
+    config = getConfig(CONFIG_PATH)
+    actions = [action.fromConfig(a) for a in config["actions"]]
 
+    print("Welcome to speeky, a text to action converter")
+    print("Options:")
+    print("* exit - will exit the loop")
+    print("* list - will list all available actions")
+    print("\n")
+    print("Begin typing to see what it can do")
 
-def _main2():
-    text = input("Type something to say:")
-    speak(text)
-    print("Now listening")
-    text = get_audio()
+    while True:
+        text = input("|> ").lower()
+        if (text == 'exit'):
+            return
 
-def _main3():
-    regy.main()
+        if (text == 'list'):
+            [print('* {}'.format(a)) for a in actions]
 
 
 if __name__ == "__main__":
-    # _main()
-    # _main2()
-    _main3()
+    _main()

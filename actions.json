@@ -1,0 +1,11 @@
+{
+  "actionStart": "hi speeky",
+  "actions": [
+    {
+      "name": "Define",
+      "pattern": ["what is a", "::(.*)"],
+      "module": "speeky.actions",
+      "function": "actionA"
+    }
+  ]
+}
