@@ -1,5 +1,6 @@
 from speeky import audio, numberParse
 import re
+from simpleeval import simple_eval
 
 
 def whatIs(match, target):
@@ -26,9 +27,6 @@ class Replaceable(object):
 
 
 def calculate(match, target):
-    # replace human words for actions (plus, minus, negative, multiply|times, divide)
-    # maybe eventually "open bracket" "close bracket" "to the power of"
-
     parsedTarget = Replaceable(target)\
         .replace('plus|add', '+')\
         .replace('take|subtract|negative', '-')\
@@ -39,14 +37,19 @@ def calculate(match, target):
         .replace("close(d*) bracket", ")")\
         .toString()
 
-    # split against all operators so that words can be parsed
+    # split against all operators so that number words can be parsed
     parts = re.split('([+\-*/])', parsedTarget)
-    parts = [str(numberParse.text2Int(part) or part) for part in parts]
+    expression = "".join(
+        [str(numberParse.text2Int(part) or part) for part in parts])
 
-    print(parts)
+    try:
+        answer = simple_eval(expression)
+        print(answer)
+    except:
+        print("!Unable to perform calculation!")
 
 
 def text2Number(match, target):
-  textAsInt = numberParse.text2Int(target)
-  print(textAsInt)
-  # audio.say(textAsInt)
+    textAsInt = numberParse.text2Int(target)
+    print(textAsInt)
+    # audio.say(textAsInt)
